@@ -48,15 +48,18 @@ export class UserService {
       selectedId,
       isFavorite
     );
+    const isFavoriteUpdated: boolean = favorites.some(
+      (id: number) => id === selectedId
+    );
     const newUsers: User[] = this.setUpdatedUsersList(
       users,
       selectedId,
-      isFavorite
+      isFavoriteUpdated
     );
     const newUser: User | null = this.setUpdatedUserDetails(
       selectUser,
       selectedId,
-      isFavorite
+      isFavoriteUpdated
     );
 
     return { favorites, users: newUsers, user: newUser };

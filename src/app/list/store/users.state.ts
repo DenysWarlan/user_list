@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { UserService } from '../../list/service/user.service';
+import { UserService } from '../service/user.service';
 import {
   GetUserDetails,
   GetUserDetailsFailure,
@@ -67,13 +67,18 @@ export class UsersState {
 
   @Action(GetUsersSuccess)
   public getUsersSuccess(
-    { patchState }: StateContext<UsersStateModel>,
+    { patchState, getState }: StateContext<UsersStateModel>,
     { payload }: GetUsersSuccess
   ): void {
+    const users: User[] = payload.users.map((user) =>
+      getState().favorites.some((id: number) => id === user.id)
+        ? { ...user, isFavorite: true }
+        : { ...user, isFavorite: false }
+    );
     patchState({
       loading: false,
       loaded: true,
-      users: payload.users,
+      users,
       pagination: payload.pagination,
       error: null,
     });
@@ -97,7 +102,12 @@ export class UsersState {
     { patchState, getState }: StateContext<UsersStateModel>,
     { payload }: ToggleFavorite
   ): void {
-    const {favorites, users, user} = this.userService.toggleFavorite(getState().favorites, getState().users, getState().user, payload)
+    const { favorites, users, user } = this.userService.toggleFavorite(
+      getState().favorites,
+      getState().users,
+      getState().user,
+      payload
+    );
 
     patchState({
       favorites,
@@ -121,11 +131,17 @@ export class UsersState {
 
   @Action(GetUserDetailsSuccess)
   public getUserDetailsSuccess(
-    { patchState }: StateContext<UsersStateModel>,
+    { patchState, getState }: StateContext<UsersStateModel>,
     { payload }: GetUserDetailsSuccess
   ): void {
+    const user: User = getState().favorites.some(
+      (id: number) => id === payload.id
+    )
+      ? { ...payload, isFavorite: true }
+      : { ...payload, isFavorite: false };
+
     patchState({
-      user: payload,
+      user,
       error: null,
     });
   }
