@@ -1,0 +1,69 @@
+<!-- If u want see animated spinner when loading data, u can uncomment this code -->
+<!--<ng-container *ngIf="!(loading$ | async); else loading">-->
+  <ng-container *ngIf="loaded$ | async">
+    <ng-container *ngIf="pagination$ | async as pagination">
+      <p-table
+        [value]="(users$ | async) || []"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [globalFilterFields]="['first_name', 'last_name', 'email']"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 5%">ID</th>
+            <th style="width: 33%">First Name</th>
+            <th style="width: 33%">Last Name</th>
+            <th style="width: 33%">E-mail</th>
+            <th style="width: 5%">Action</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th>
+              <p-columnFilter type="text" field="first_name"></p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter type="text" field="last_name"></p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter type="text" field="email"></p-columnFilter>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <div class="">
+                <i
+                  class="pi pi-arrow-up-right"
+                  (click)="showDetails(user.id)"
+                ></i>
+                <i
+                  class="pi"
+                  [ngClass]="user.isFavorite ? 'pi-star-fill' : 'pi-star'"
+                  (click)="toggleFavorite(user.id)"
+                ></i>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-paginator
+        [rows]="pagination.per_page || defaultPagination.per_page"
+        [totalRecords]="pagination.total || defaultPagination.total || 0"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        (onPageChange)="paginate($event)"
+      >
+      </p-paginator>
+    </ng-container>
+  </ng-container>
+<!-- If u want see animated spinner when loading data, u can uncomment this code -->
+<!--</ng-container>-->
+<!--<ng-template #loading>-->
+<!--  <div class="loading">-->
+<!--    <i class="pi pi-spin pi-spinner" style="font-size: 5rem"></i>-->
+<!--  </div>-->
+<!--</ng-template>-->

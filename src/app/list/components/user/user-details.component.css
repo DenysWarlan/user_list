@@ -1,0 +1,10 @@
+.p-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+}
+
+.p-card {
+  width: inherit;
+}

@@ -1,0 +1,24 @@
+<div>
+  <i class="pi pi-angle-left" (click)="backToList()"></i>
+</div>
+
+<ng-container *ngIf="user$ | async as user">
+  <p-card class="card">
+    <ng-template pTemplate="header"
+      ><img [src]="user.avatar" alt="" />
+    </ng-template>
+    {{ user.first_name }} {{ user.last_name }}
+    <p>{{ user.email }}</p>
+    <ng-template pTemplate="footer">
+      <div (click)="toggleFavorite(user.id)">
+        <span>{{
+          user.isFavorite ? "Delete as favorite " : "Set as favorite "
+        }}</span>
+        <i
+          class="pi"
+          [ngClass]="user.isFavorite ? 'pi-star-fill' : 'pi-star'"
+        ></i>
+      </div>
+    </ng-template>
+  </p-card>
+</ng-container>
